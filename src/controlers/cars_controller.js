@@ -9,7 +9,7 @@ const getCars = async (req, res) => {
   }
 };
 
-const getCarsById = async (req, res) => {
+const getCarById = async (req, res) => {
   const { id } = req.params;
   try {
     const data = await Model.find({ _id: id });
@@ -59,4 +59,22 @@ const deleteCarById = async (req, res) => {
   }
 };
 
-module.exports = {createCar, getCars, getCarsById,  updateCarById, deleteCarById };
+const getCarsAndOwners = async (req, res) => {
+  try {
+    const data = await Model.aggregate([
+      {
+        $lookup: {
+          from: 'drivers',
+          localField: '_id',
+          foreignField: 'carOwner',
+          as: 'details',
+        },
+      },
+    ]);
+    res.json(data);
+  } catch (error) {
+    res.status(400).json({ message: error.message });
+  }
+};
+
+module.exports = { createCar, getCars, getCarById, updateCarById, deleteCarById, getCarsAndOwners };
