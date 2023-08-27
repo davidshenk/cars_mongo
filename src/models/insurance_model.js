@@ -19,4 +19,4 @@ const insuranceSchema = new mongoose.Schema({
   },
 });
 
-module.exports = mongoose.model('insuranceCompany',insuranceSchema)
+module.exports = mongoose.model('insurance',insuranceSchema)

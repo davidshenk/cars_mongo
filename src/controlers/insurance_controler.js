@@ -1,12 +1,13 @@
-const Model = require('../models/drivers_model');
+const Model = require('../models/insurance_model');
 
-const createDriver = async (req, res) => {
+const createInsuranceCompany = async (req, res) => {
   const data = new Model({
     name: req.body.name,
-    age: req.body.age,
-    carOwner: req.body.carOwner,
+    address: req.body.address,
+    isLowCost: req.body.isLowCost,
+    carInsured: req.body.carInsured,
   });
-  console.log(data);
+
   try {
     const dataToSave = await data.save();
     res.status(200).json(dataToSave);
@@ -15,7 +16,7 @@ const createDriver = async (req, res) => {
   }
 };
 
-const getDrivers = async (req, res) => {
+const getInsuranceCompanies = async (req, res) => {
   try {
     const data = await Model.find();
     res.json(data);
@@ -24,8 +25,9 @@ const getDrivers = async (req, res) => {
   }
 };
 
-const getDriverById = async (req, res) => {
+const getInsuranceCompanyById = async (req, res) => {
   const { id } = req.params;
+
   try {
     const data = await Model.find({ _id: id });
     res.json(data);
@@ -34,7 +36,7 @@ const getDriverById = async (req, res) => {
   }
 };
 
-const updateDriverById = async (req, res) => {
+const updatedInsuranceCompanyById = async (req, res) => {
   const { id } = req.params;
   const newData = req.body;
   try {
@@ -45,8 +47,9 @@ const updateDriverById = async (req, res) => {
   }
 };
 
-const deleteDriverById = async (req, res) => {
+const deletedInsuranceCompanyById = async (req, res) => {
   const { id } = req.params;
+
   try {
     const data = await Model.findByIdAndDelete(id);
     res.json(data);
@@ -55,19 +58,16 @@ const deleteDriverById = async (req, res) => {
   }
 };
 
-const getDriversAndCars = async (req, res) => {
+const getInsuranceAndCars = async (req, res) => {
   try {
     const data = await Model.aggregate([
       {
         $lookup: {
           from: 'cars',
-          localField: 'carOwner',
+          localField: 'carInsured',
           foreignField: '_id',
           as: 'carData',
         },
-      },
-      {
-        $unwind: '$carData',
       },
     ]);
     res.json(data);
@@ -76,4 +76,11 @@ const getDriversAndCars = async (req, res) => {
   }
 };
 
-module.exports = { getDrivers, getDriverById, createDriver, updateDriverById, deleteDriverById, getDriversAndCars };
+module.exports = {
+  createInsuranceCompany,
+  getInsuranceCompanies,
+  getInsuranceCompanyById,
+  updatedInsuranceCompanyById,
+  deletedInsuranceCompanyById,
+  getInsuranceAndCars,
+};

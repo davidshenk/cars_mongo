@@ -67,8 +67,11 @@ const getCarsAndOwners = async (req, res) => {
           from: 'drivers',
           localField: '_id',
           foreignField: 'carOwner',
-          as: 'details',
+          as: 'driverData',
         },
+      },
+      {
+        $unwind: '$driverData',
       },
     ]);
     res.json(data);
@@ -77,4 +80,31 @@ const getCarsAndOwners = async (req, res) => {
   }
 };
 
-module.exports = { createCar, getCars, getCarById, updateCarById, deleteCarById, getCarsAndOwners };
+const getCarDriverAndInsurance = async (req, res) => {
+  try {
+    const data = await Model.aggregate([
+      {
+        $lookup: {
+          from: 'insurance',
+          localField: '_id',
+          foreignField: 'carInsured',
+          as: 'insuranceData',
+        },
+      },
+      
+    ]);
+    res.json(data);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
+module.exports = {
+  createCar,
+  getCars,
+  getCarById,
+  updateCarById,
+  deleteCarById,
+  getCarsAndOwners,
+  getCarDriverAndInsurance,
+};

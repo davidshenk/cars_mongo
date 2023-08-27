@@ -5,6 +5,7 @@ const port = 3000;
 
 const carsController = require('./src/controlers/cars_controller.js');
 const driversControler = require('./src/controlers/drivers_controler.js');
+const insuranceControler = require('./src/controlers/insurance_controler.js');
 
 app.use(express.json());
 app.listen(port, () => {
@@ -21,6 +22,7 @@ database.once('connected', () => {
   console.log('database conected');
 });
 
+// using cars controler
 app.get('/cars/', (req, res) => {
   carsController.getCars(req, res);
 });
@@ -68,4 +70,33 @@ app.delete('/drivers/:id', (req, res) => {
 
 app.get('/driversAndCars', (req, res) => {
   driversControler.getDriversAndCars(req, res);
+});
+
+//using insurance
+app.post('/insurance', (req, res) => {
+  insuranceControler.createInsuranceCompany(req, res);
+});
+
+app.get('/insurance', (req, res) => {
+  insuranceControler.getInsuranceCompanies(req, res);
+});
+
+app.get('/insurance/:id', (req, res) => {
+  insuranceControler.getInsuranceCompanyById(req, res);
+});
+
+app.put('/insurance/:id', (req, res) => {
+  insuranceControler.updatedInsuranceCompanyById(req, res);
+});
+
+app.delete('/insurance/:id', (req, res) => {
+  insuranceControler.deletedInsuranceCompanyById(req, res);
+});
+
+app.get('/carDriversAndInsurance', (req, res) => {
+  carsController.getCarDriverAndInsurance(req, res);
+});
+
+app.get('/insuranceAndCars', (req, res) => {
+  insuranceControler.getInsuranceAndCars(req, res);
 });
