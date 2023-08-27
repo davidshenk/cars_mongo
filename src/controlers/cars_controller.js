@@ -85,13 +85,26 @@ const getCarDriverAndInsurance = async (req, res) => {
     const data = await Model.aggregate([
       {
         $lookup: {
-          from: 'insurance',
+          from: 'drivers',
           localField: '_id',
-          foreignField: 'carInsured',
-          as: 'insuranceData',
+          foreignField: 'carOwner',
+          as: 'driverData',
         },
       },
-      
+      {
+        $unwind: '$driverData',
+      },
+      {
+        $lookup: {
+          from: 'insurances',
+          localField: '_id',
+          foreignField: 'carInsured',
+          as: 'driverData.insuranceData',
+        },
+      },
+      {
+        $unwind: '$driverData.insuranceData',
+      },
     ]);
     res.json(data);
   } catch (error) {

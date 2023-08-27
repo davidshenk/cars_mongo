@@ -5,7 +5,7 @@ const port = 3000;
 
 const carsController = require('./src/controlers/cars_controller.js');
 const driversControler = require('./src/controlers/drivers_controler.js');
-const insuranceControler = require('./src/controlers/insurance_controler.js');
+const insuranceControler = require('./src/controlers/Insurance_controler.js');
 
 app.use(express.json());
 app.listen(port, () => {
