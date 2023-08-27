@@ -89,6 +89,9 @@ const getCarDriverAndInsurance = async (req, res) => {
           localField: '_id',
           foreignField: 'carOwner',
           as: 'driverData',
+          pipeline: [
+            { $project: { 'carOwner': 0, '__v': 0 } }
+        ],
         },
       },
       {
@@ -96,14 +99,18 @@ const getCarDriverAndInsurance = async (req, res) => {
       },
       {
         $lookup: {
-          from: 'insurances',
+          from: 'insurance',
           localField: '_id',
           foreignField: 'carInsured',
-          as: 'driverData.insuranceData',
+          as: 'insuranceData',
+          pipeline: [
+            { $project: { 'carInsured': 0, '__v': 0 } }
+        ],
         },
       },
+      
       {
-        $unwind: '$driverData.insuranceData',
+        $unwind: '$insuranceData',
       },
     ]);
     res.json(data);
